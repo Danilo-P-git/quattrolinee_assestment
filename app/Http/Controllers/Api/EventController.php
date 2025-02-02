@@ -5,42 +5,79 @@ namespace App\Http\Controllers\Api;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EventRequest;
-use App\Http\Resources\EventResource;
-use App\Models\Event;
-use App\Repositories\Interfaces\IEventRepository;
+use App\Repositories\Interfaces\EventRepositoryInterface;
 use Illuminate\Http\Request;
 
+/**
+ * @OA\Tag(
+ *     name="Events",
+ *     description="API per la gestione degli eventi"
+ * )
+ */
 class EventController extends Controller
 {
-
     protected $eventRepository;
 
-    public function __construct(IEventRepository $eventRepository)
+    public function __construct(EventRepositoryInterface $eventRepository)
     {
         $this->eventRepository = $eventRepository;
     }
+
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/api/events",
+     *     summary="Lista degli eventi",
+     *     description="Restituisce una lista di eventi paginati",
+     *     tags={"Events"},
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Numero della pagina",
+     *         required=false,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista eventi restituita con successo",
+     *         @OA\JsonContent(type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Lista degli eventi"),
+     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/Event"))
+     *         )
+     *     )
+     * )
      */
     public function index()
     {
         try {
             $events = $this->eventRepository->getAll();
-
             return ApiResponse::success($events);
         } catch (\Exception $e) {
-            return ApiResponse::error($e->getMessage(), 500, $e);
+            return ApiResponse::error('Error', 500, $e);
         }
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/api/events",
+     *     summary="Crea un nuovo evento",
+     *     description="Crea un evento e lo salva nel database",
+     *     tags={"Events"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/EventRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Evento creato con successo",
+     *         @OA\JsonContent(ref="#/components/schemas/Event")
+     *     )
+     * )
      */
     public function store(EventRequest $request)
     {
         try {
             $event = $this->eventRepository->create($request->validated());
-
             return ApiResponse::success($event, "Evento creato con successo", 201);
         } catch (\Exception $e) {
             return ApiResponse::error($e->getMessage(), 500, $e);
@@ -48,9 +85,27 @@ class EventController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/events/{id}",
+     *     summary="Mostra un evento",
+     *     description="Restituisce i dettagli di un evento specifico",
+     *     tags={"Events"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID dell'evento",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Evento trovato con successo",
+     *         @OA\JsonContent(ref="#/components/schemas/Event")
+     *     ),
+     *     @OA\Response(response=404, description="Evento non trovato")
+     * )
      */
-    public function show(string $id)
+    public function show($id)
     {
         try {
             $event = $this->eventRepository->findById($id);
@@ -61,28 +116,66 @@ class EventController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Put(
+     *     path="/api/events/{id}",
+     *     summary="Aggiorna un evento",
+     *     description="Modifica i dettagli di un evento esistente",
+     *     tags={"Events"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID dell'evento da aggiornare",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/EventRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Evento aggiornato con successo",
+     *         @OA\JsonContent(ref="#/components/schemas/Event")
+     *     ),
+     *     @OA\Response(response=404, description="Evento non trovato")
+     * )
      */
-    public function update(EventRequest $request, string $id)
+    public function update(EventRequest $request, $id)
     {
         try {
             $event = $this->eventRepository->update($id, $request->validated());
-
-            return ApiResponse::success($event);
+            return ApiResponse::success($event, "Evento aggiornato con successo", 200);
         } catch (\Exception $e) {
             return ApiResponse::error($e->getMessage(), 404, $e);
         }
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *     path="/api/events/{id}",
+     *     summary="Elimina un evento",
+     *     description="Rimuove un evento dal database",
+     *     tags={"Events"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID dell'evento da eliminare",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Evento eliminato con successo",
+     *         @OA\JsonContent(ref="#/components/schemas/Event")
+     *     ),
+     *     @OA\Response(response=404, description="Evento non trovato")
+     * )
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
         try {
             $event = $this->eventRepository->delete($id);
-
-            return ApiResponse::success($event);
+            return ApiResponse::success($event, "Evento eliminato con successo", 200);
         } catch (\Exception $e) {
             return ApiResponse::error($e->getMessage(), 404, $e);
         }
