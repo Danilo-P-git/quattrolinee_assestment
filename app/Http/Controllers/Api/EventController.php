@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EventRequest;
-use App\Repositories\Interfaces\EventRepositoryInterface;
+use App\Http\Requests\SearchEventRequest;
+use App\Repositories\Interfaces\IEventRepository;
 use Illuminate\Http\Request;
 
 /**
@@ -18,7 +19,7 @@ class EventController extends Controller
 {
     protected $eventRepository;
 
-    public function __construct(EventRepositoryInterface $eventRepository)
+    public function __construct(IEventRepository $eventRepository)
     {
         $this->eventRepository = $eventRepository;
     }
@@ -49,6 +50,7 @@ class EventController extends Controller
      */
     public function index()
     {
+        dd('arrivo qua');
         try {
             $events = $this->eventRepository->getAll();
             return ApiResponse::success($events);
@@ -178,6 +180,47 @@ class EventController extends Controller
             return ApiResponse::success($event, "Evento eliminato con successo", 200);
         } catch (\Exception $e) {
             return ApiResponse::error($e->getMessage(), 404, $e);
+        }
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/events/search",
+     *     summary="Cerca e filtra eventi",
+     *     description="Cerca eventi per nome o descrizione e filtra per categoria",
+     *     tags={"Events"},
+     *     @OA\Parameter(
+     *         name="q",
+     *         in="query",
+     *         description="Testo di ricerca per nome o descrizione",
+     *         required=false,
+     *         @OA\Schema(type="string", example="concerto")
+     *     ),
+     *     @OA\Parameter(
+     *         name="category_id",
+     *         in="query",
+     *         description="Filtra per categoria",
+     *         required=false,
+     *         @OA\Schema(type="integer", example=2)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista eventi filtrata",
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/Event"))
+     *     )
+     * )
+     */
+    public function search(SearchEventRequest $request)
+    {
+        try {
+            $query = $request->query('q');
+            $categoryId = $request->query('category_id');
+
+            $events = $this->eventRepository->searchAndFilter($query, $categoryId);
+
+            return ApiResponse::success($events, "Risultati della ricerca");
+        } catch (\Exception $e) {
+            return ApiResponse::error("Errore nella ricerca", 500, $e);
         }
     }
 }

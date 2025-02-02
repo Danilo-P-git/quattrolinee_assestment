@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Event;
 use App\Repositories\Interfaces\IEventRepository;
+use Exception;
 
 class EventRepository implements IEventRepository
 {
@@ -34,5 +35,20 @@ class EventRepository implements IEventRepository
         $event = $this->findById($id);
         $event->delete();
         return $event;
+    }
+
+    public function searchAndFilter($query = null, $categoryId = null, $perPage = 10)
+    {
+        $events = Event::query();
+        if ($query) {
+            $events->where('name', 'LIKE', "%$query%")
+                ->orWhere('description', 'LIKE', "%$query%");
+        }
+
+        if ($categoryId) {
+            $events->where('category_id', $categoryId);
+        }
+
+        return $events->paginate($perPage);
     }
 }
