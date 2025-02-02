@@ -4,6 +4,18 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="EventRequest",
+ *     required={"name", "description", "length", "start_date"},
+ *     @OA\Property(property="name", type="string", example="Concerto Jazz"),
+ *     @OA\Property(property="description", type="string", example="Concerto jazz dal vivo"),
+ *     @OA\Property(property="length", type="number", format="float", example=3.0),
+ *     @OA\Property(property="start_date", type="string", format="date-time", example="2024-07-15 21:00:00"),
+ *     @OA\Property(property="category_id", type="integer", example=2)
+ * )
+ */
+
 class EventRequest extends FormRequest
 {
     public function authorize(): bool
