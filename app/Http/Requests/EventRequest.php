@@ -30,6 +30,8 @@ class EventRequest extends FormRequest
             'description' => 'required|string',
             'length' => 'required|numeric|min:0',
             'start_date' => 'required|date|after:today',
+            'category_id' => 'nullable|integer|exists:categories,id',
+
         ];
     }
 
@@ -50,6 +52,9 @@ class EventRequest extends FormRequest
             'start_date.required' => 'La data di inizio è obbligatoria.',
             'start_date.date' => 'La data di inizio deve essere una data valida.',
             'start_date.after' => 'La data di inizio deve essere futura.',
+
+            'category_id.integer' => 'L\'ID della categoria deve essere un numero intero.',
+            'category_id.exists' => 'La categoria selezionata non esiste.',
         ];
     }
 }
