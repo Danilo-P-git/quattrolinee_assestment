@@ -96,7 +96,7 @@ class CartController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/cart/remove",
+     *     path="/api/carts/remove",
      *     summary="Rimuovi al cart un elemento",
      *     description="Rimuove ad un cart un singolo evento o una quantità prestabilita di biglietti  ",
      *     tags={"Carts"},

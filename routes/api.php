@@ -21,5 +21,5 @@ Route::apiResource('categories', CategoryController::class);
 //routes carrelli
 
 Route::get('carts/{cart_id}', [CartController::class, 'show']);
-Route::post('cart/add', [CartController::class, 'add']);
-Route::delete('cart/remove', [CartController::class, 'remove']);
+Route::post('carts/add', [CartController::class, 'add']);
+Route::delete('carts/remove', [CartController::class, 'remove']);

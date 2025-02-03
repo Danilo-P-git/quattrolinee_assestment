@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\CartItem;
 use App\Models\Event;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 
 /**
  * @OA\Schema(
@@ -61,11 +62,15 @@ class CartRequest extends FormRequest
                     'min:1',
                     function ($attribute, $value, $fail) {
                         $cartItemQuantity = CartItem::where([
-                            ['event_id' => $this->event_id],
-                            ['cart_id' => $this->cart_id]
-                        ])->pluck('quantity');
-                        if ($cartItemQuantity && $value > $cartItemQuantity) {
-                            $fail("La quantità richiesta ($value) supera i biglietti all'interno del carrello ({$cartItemQuantity}).");
+                            ['event_id', '=', $this->event_id],
+                            ['cart_id', '=', $this->cart_id]
+                        ])->first();
+
+                        // $quantity = $cartItemQuantity->quantity;
+
+
+                        if ($cartItemQuantity && $cartItemQuantity->quantity < $value) {
+                            $fail("La quantità richiesta ($value) supera i biglietti all'interno del carrello ({$cartItemQuantity->quantity}).");
                         }
                     }
                 ]

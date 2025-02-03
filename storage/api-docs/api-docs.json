@@ -59,14 +59,14 @@
                 }
             }
         },
-        "/api/cart/add": {
+        "/api/carts/add": {
             "post": {
                 "tags": [
                     "Carts"
                 ],
                 "summary": "Aggiungi al cart un nuovo elemento",
                 "description": "Aggiunge ad un cart (o lo crea) un singolo evento  ",
-                "operationId": "e940193f73a57895e17830b67c48f89c",
+                "operationId": "24a3ebb22f948e8e4b6514f8e23ca61f",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -79,7 +79,52 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Categoria creata con successo",
+                        "description": "Oggetti creati con successo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Evento aggiunto al carrello"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/CartItem"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/carts/remove": {
+            "delete": {
+                "tags": [
+                    "Carts"
+                ],
+                "summary": "Rimuovi al cart un elemento",
+                "description": "Rimuove ad un cart un singolo evento o una quantità prestabilita di biglietti  ",
+                "operationId": "b798944d40d08c70c1bb01ededbcf3d7",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CartRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Oggetti Cancellati con successo",
                         "content": {
                             "application/json": {
                                 "schema": {
