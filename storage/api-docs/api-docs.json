@@ -83,7 +83,20 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/CartItem"
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Evento aggiunto al carrello"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/CartItem"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }

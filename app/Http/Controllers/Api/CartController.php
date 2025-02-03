@@ -64,7 +64,7 @@ class CartController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/cart/add",
+     *     path="/api/carts/add",
      *     summary="Aggiungi al cart un nuovo elemento",
      *     description="Aggiunge ad un cart (o lo crea) un singolo evento  ",
      *     tags={"Carts"},
@@ -74,15 +74,54 @@ class CartController extends Controller
      *     ),
      *     @OA\Response(
      *         response=201,
-     *         description="Categoria creata con successo",
-     *         @OA\JsonContent(ref="#/components/schemas/CartItem")
+     *         description="Oggetti creati con successo",
+     *         @OA\JsonContent(type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Evento aggiunto al carrello"),
+     *             @OA\Property(property="data", type="object", ref="#/components/schemas/CartItem")
+     *         )
      *     )
      * )
      */
     public function add(CartRequest $request)
     {
-        $cart_item = $this->cartRepository->addToCart($request);
+        try {
+            $cart_item = $this->cartRepository->addToCart($request);
+            return ApiResponse::success($cart_item, 'evento aggiunto al carrello', 200);
+        } catch (\Exception $e) {
+            return ApiResponse::error($e->getMessage(), 500, $e);
+        }
+    }
 
-        return ApiResponse::success($cart_item, 'evento aggiunto al carrello', 200);
+
+    /**
+     * @OA\Delete(
+     *     path="/api/cart/remove",
+     *     summary="Rimuovi al cart un elemento",
+     *     description="Rimuove ad un cart un singolo evento o una quantità prestabilita di biglietti  ",
+     *     tags={"Carts"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/CartRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Oggetti Cancellati con successo",
+     *         @OA\JsonContent(type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Evento aggiunto al carrello"),
+     *             @OA\Property(property="data", type="object", ref="#/components/schemas/CartItem")
+     *         )
+     *     )
+     * )
+     */
+    public function remove(CartRequest $request)
+    {
+        try {
+            $cart_item = $this->cartRepository->removeToCart($request);
+            return ApiResponse::success($cart_item, 'evento rimosso dal carrello', 200);
+        } catch (\Exception $e) {
+            return ApiResponse::error($e->getMessage(), 500, $e);
+        }
     }
 }

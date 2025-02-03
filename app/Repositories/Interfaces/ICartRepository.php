@@ -8,6 +8,6 @@ interface ICartRepository
 {
     public function show($cart_id);
     public function addToCart(CartRequest $request);
-    public function removeToCart();
+    public function removeToCart(CartRequest $request);
     public function emptyCart();
 }

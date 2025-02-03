@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\CartItem;
 use App\Models\Event;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -34,21 +35,42 @@ class CartRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'event_id' => 'required|integer|exists:events,id',
-            'cart_id' => 'nullable|integer|exists:carts,id',
-            'quantity' => [
-                'required',
-                'integer',
-                'min:1',
-                function ($attribute, $value, $fail) {
-                    $event = Event::find($this->event_id);
-                    if ($event && $value > $event->available_tickets) {
-                        $fail("La quantità richiesta ($value) supera i biglietti disponibili ({$event->available_tickets}).");
+        if ($this->isMethod('POST')) {
+            return [
+                'event_id' => 'required|integer|exists:events,id',
+                'cart_id' => 'nullable|integer|exists:carts,id',
+                'quantity' => [
+                    'required',
+                    'integer',
+                    'min:1',
+                    function ($attribute, $value, $fail) {
+                        $event = Event::find($this->event_id);
+                        if ($event && $value > $event->available_tickets) {
+                            $fail("La quantità richiesta ($value) supera i biglietti disponibili ({$event->available_tickets}).");
+                        }
                     }
-                }
-            ]
-        ];
+                ]
+            ];
+        } else if ($this->isMethod('DELETE')) {
+            return [
+                'event_id' => 'required|integer|exists:events,id',
+                'cart_id' => 'required|integer|exists:carts,id',
+                'quantity' => [
+                    'required',
+                    'integer',
+                    'min:1',
+                    function ($attribute, $value, $fail) {
+                        $cartItemQuantity = CartItem::where([
+                            ['event_id' => $this->event_id],
+                            ['cart_id' => $this->cart_id]
+                        ])->pluck('quantity');
+                        if ($cartItemQuantity && $value > $cartItemQuantity) {
+                            $fail("La quantità richiesta ($value) supera i biglietti all'interno del carrello ({$cartItemQuantity}).");
+                        }
+                    }
+                ]
+            ];
+        }
     }
 
     public function messages(): array
@@ -57,7 +79,8 @@ class CartRequest extends FormRequest
             'event_id.required' => 'L\'ID dell\'evento è obbligatorio.',
             'event_id.exists' => 'L\'evento selezionato non esiste.',
 
-            'cart_id.exists' => 'L\'evento selezionato non esiste.',
+            'cart_id.exists' => 'Il carrello selezionato non esiste.',
+            'cart_id.required' => 'L\'ID dell\'carrello è obbligatorio.',
 
             'quantity.required' => 'La quantità è obbligatoria.',
             'quantity.integer' => 'La quantità deve essere un numero intero.',

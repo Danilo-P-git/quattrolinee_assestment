@@ -37,6 +37,20 @@ class CartRepository implements ICartRepository
         $cart_item->load('event');
         return $cart_item;
     }
-    public function removeToCart() {}
+    public function removeToCart(CartRequest $request)
+    {
+        $cart_item =  CartItem::where([
+            ['event_id' => $request['event_id']],
+            ['cart_id' => $request['cart_id']]
+        ])->first();
+
+        $cart_item->quantity = $cart_item->quantity - $request['quantity'];
+        if ($cart_item == 0) {
+            $cart_item->delete();
+        } else {
+            $cart_item->save();
+        }
+        return $cart_item;
+    }
     public function emptyCart() {}
 }
