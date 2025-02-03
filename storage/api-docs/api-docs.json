@@ -9,6 +9,196 @@
         "version": "1.0"
     },
     "paths": {
+        "/api/carts/{cart_id}": {
+            "get": {
+                "tags": [
+                    "Carts"
+                ],
+                "summary": "Lista degli item del carrello",
+                "description": "Restituisce una lista degli item all'interno del carrello",
+                "operationId": "96deca4bfc699e15aa3a361a8424a48b",
+                "parameters": [
+                    {
+                        "name": "cart_id",
+                        "in": "path",
+                        "description": "ID del carrello",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista degli item all'interno del carrello restituita con successo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Lista degli oggetti all'interno del carrello"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/CartItem"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/carts/add": {
+            "post": {
+                "tags": [
+                    "Carts"
+                ],
+                "summary": "Aggiungi al cart un nuovo elemento",
+                "description": "Aggiunge ad un cart (o lo crea) un singolo evento  ",
+                "operationId": "24a3ebb22f948e8e4b6514f8e23ca61f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CartRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Oggetti creati con successo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Evento aggiunto al carrello"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/CartItem"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/carts/remove": {
+            "post": {
+                "tags": [
+                    "Carts"
+                ],
+                "summary": "Rimuovi al cart un elemento",
+                "description": "Rimuove ad un cart un singolo evento o una quantità prestabilita di biglietti  ",
+                "operationId": "db2a70c2a9fea67387f3e8b36b69baf4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CartRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Oggetti Cancellati con successo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Evento aggiunto al carrello"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/CartItem"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/carts/empty/{cart_id}": {
+            "delete": {
+                "tags": [
+                    "Carts"
+                ],
+                "summary": "Svuota un cart",
+                "description": "Svuota cart di tutti gli eventi e aggiunge agli eventi la quantità che il cart aveva all'interno",
+                "operationId": "1e840cfb1228d5a846706775702bb75c",
+                "parameters": [
+                    {
+                        "name": "cart_id",
+                        "in": "path",
+                        "description": "ID del carrello da eliminare",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Oggetti Cancellati con successo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Evento aggiunto al carrello"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/CartItem"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/categories": {
             "get": {
                 "tags": [
@@ -42,7 +232,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Lista delle categorie"
+                                            "example": "Lista delle categorie recuperata con successo"
                                         },
                                         "data": {
                                             "type": "array",
@@ -81,7 +271,20 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Category"
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Categoria creata con successo"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Category"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -115,7 +318,20 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Category"
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Singola categoria recuperata"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Category"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -160,7 +376,20 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Category"
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Elemento modificato con successo"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Category"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -195,7 +424,20 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Category"
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Elemento eliminato con successo"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Category"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -274,11 +516,24 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Evento creato con successo",
+                        "description": "Crea un evento e lo salva nel database",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Event"
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Creazione dell'evento"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Event"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -308,17 +563,27 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Evento trovato con successo",
+                        "description": "Evento visualizzato con successo",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Event"
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Evento visualizzato"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Event"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
-                    },
-                    "404": {
-                        "description": "Evento non trovato"
                     }
                 }
             },
@@ -353,17 +618,27 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Evento aggiornato con successo",
+                        "description": "Evento modificato con successo",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Event"
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Evento modificato"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Event"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
-                    },
-                    "404": {
-                        "description": "Evento non trovato"
                     }
                 }
             },
@@ -388,17 +663,27 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Evento eliminato con successo",
+                        "description": "Evento cancellato con successo",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Event"
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Evento cancellato"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Event"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
-                    },
-                    "404": {
-                        "description": "Evento non trovato"
                     }
                 }
             }
@@ -435,14 +720,27 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Lista eventi filtrata",
+                        "description": "Evento ricercato con successo",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/Event"
-                                    }
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Evento ricercato con successo"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Event"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -453,6 +751,28 @@
     },
     "components": {
         "schemas": {
+            "CartRequest": {
+                "title": "Richiesta di Creazione o aggiunta di un item al carrello",
+                "description": "Schema per la creazione o l'aggiunta di un prodotto al carrello",
+                "required": [
+                    "event_id, quantity"
+                ],
+                "properties": {
+                    "cart_id": {
+                        "type": "integer",
+                        "example": "2"
+                    },
+                    "event_id": {
+                        "type": "integer",
+                        "example": "45"
+                    },
+                    "quantity": {
+                        "type": "integer",
+                        "example": "25"
+                    }
+                },
+                "type": "object"
+            },
             "CategoryRequest": {
                 "title": "Richiesta di Creazione Categoria",
                 "description": "Schema per la creazione e modifica delle categorie",
@@ -496,6 +816,10 @@
                     "category_id": {
                         "type": "integer",
                         "example": 2
+                    },
+                    "available_tickets": {
+                        "type": "integer",
+                        "example": 1
                     }
                 },
                 "type": "object"
@@ -518,6 +842,43 @@
                         "description": "Numero della pagina",
                         "type": "integer",
                         "example": 1
+                    }
+                },
+                "type": "object"
+            },
+            "Cart": {
+                "title": "Carrello",
+                "description": "Schema di un carrello",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                },
+                "type": "object"
+            },
+            "CartItem": {
+                "title": "Item carrello",
+                "description": "Schema di singolo item del carrello",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "cart_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "event_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "quantity": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "event": {
+                        "$ref": "#/components/schemas/Event"
                     }
                 },
                 "type": "object"
@@ -562,6 +923,14 @@
                         "type": "string",
                         "format": "date-time",
                         "example": "2024-07-15 21:00:00"
+                    },
+                    "available_tickets": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "category_id": {
+                        "type": "integer",
+                        "example": 1
                     }
                 },
                 "type": "object"
@@ -569,6 +938,10 @@
         }
     },
     "tags": [
+        {
+            "name": "Carts",
+            "description": "API per la gestione dei carrelli e degli oggetti all'interno"
+        },
         {
             "name": "Categories",
             "description": "API per la gestione delle categorie"

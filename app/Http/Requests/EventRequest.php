@@ -12,7 +12,8 @@ use Illuminate\Foundation\Http\FormRequest;
  *     @OA\Property(property="description", type="string", example="Concerto jazz dal vivo"),
  *     @OA\Property(property="length", type="number", format="float", example=3.0),
  *     @OA\Property(property="start_date", type="string", format="date-time", example="2024-07-15 21:00:00"),
- *     @OA\Property(property="category_id", type="integer", example=2)
+ *     @OA\Property(property="category_id", type="integer", example=2),
+ *     @OA\Property(property="available_tickets", type="integer", example=1),
  * )
  */
 
@@ -31,6 +32,7 @@ class EventRequest extends FormRequest
             'length' => 'required|numeric|min:0',
             'start_date' => 'required|date|after:today',
             'category_id' => 'nullable|integer|exists:categories,id',
+            'available_tickets' => 'required|integer|min:1',
 
         ];
     }
@@ -55,6 +57,9 @@ class EventRequest extends FormRequest
 
             'category_id.integer' => 'L\'ID della categoria deve essere un numero intero.',
             'category_id.exists' => 'La categoria selezionata non esiste.',
+
+            'available_tickets.integer' => 'Il numero di biglietti deve essere un numero intero',
+            'available_tickets.min' => 'Il numero di biglietti deve essere un numero maggiore di 0'
         ];
     }
 }

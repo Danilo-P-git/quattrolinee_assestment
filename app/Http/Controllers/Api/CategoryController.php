@@ -41,7 +41,7 @@ class CategoryController extends Controller
      *         description="Lista categorie restituita con successo",
      *         @OA\JsonContent(type="object",
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Lista delle categorie"),
+     *             @OA\Property(property="message", type="string", example="Lista delle categorie recuperata con successo"),
      *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/Category"))
      *         )
      *     )
@@ -70,7 +70,11 @@ class CategoryController extends Controller
      *     @OA\Response(
      *         response=201,
      *         description="Categoria creata con successo",
-     *         @OA\JsonContent(ref="#/components/schemas/Category")
+     *         @OA\JsonContent(type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Categoria creata con successo"),
+     *             @OA\Property(property="data", type="object", ref="#/components/schemas/Category")
+     *         )
      *     )
      * )
      */
@@ -100,7 +104,11 @@ class CategoryController extends Controller
      *     @OA\Response(
      *         response=200,
      *         description="Categoria trovata con successo",
-     *         @OA\JsonContent(ref="#/components/schemas/Category")
+     *         @OA\JsonContent(type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Singola categoria recuperata"),
+     *             @OA\Property(property="data", type="object", ref="#/components/schemas/Category")
+     *         )
      *     ),
      *     @OA\Response(response=404, description="Categoria non trovata")
      * )
@@ -135,7 +143,11 @@ class CategoryController extends Controller
      *     @OA\Response(
      *         response=200,
      *         description="Categoria aggiornata con successo",
-     *         @OA\JsonContent(ref="#/components/schemas/Category")
+     *         @OA\JsonContent(type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Elemento modificato con successo"),
+     *             @OA\Property(property="data", type="object", ref="#/components/schemas/Category")
+     *         )
      *     ),
      *     @OA\Response(response=404, description="Categoria non trovata")
      * )
@@ -166,7 +178,11 @@ class CategoryController extends Controller
      *     @OA\Response(
      *         response=200,
      *         description="Categoria eliminata con successo",
-     *         @OA\JsonContent(ref="#/components/schemas/Category")
+     *         @OA\JsonContent(type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Elemento eliminato con successo"),
+     *             @OA\Property(property="data", type="object", ref="#/components/schemas/Category")
+     *         )
      *     ),
      *     @OA\Response(response=404, description="Categoria non trovata")
      * )

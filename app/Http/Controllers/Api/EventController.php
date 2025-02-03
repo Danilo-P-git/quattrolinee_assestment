@@ -50,7 +50,6 @@ class EventController extends Controller
      */
     public function index()
     {
-        dd('arrivo qua');
         try {
             $events = $this->eventRepository->getAll();
             return ApiResponse::success($events);
@@ -69,11 +68,15 @@ class EventController extends Controller
      *         required=true,
      *         @OA\JsonContent(ref="#/components/schemas/EventRequest")
      *     ),
-     *     @OA\Response(
+     *      @OA\Response(
      *         response=201,
-     *         description="Evento creato con successo",
-     *         @OA\JsonContent(ref="#/components/schemas/Event")
-     *     )
+     *         description="Crea un evento e lo salva nel database",
+     *         @OA\JsonContent(type="object",
+     *              @OA\Property(property="status", type="string", example="success"),
+     *              @OA\Property(property="message", type="string", example="Creazione dell'evento"),
+     *              @OA\Property(property="data", type="object", ref="#/components/schemas/Event")
+     *          )
+     *      )
      * )
      */
     public function store(EventRequest $request)
@@ -99,12 +102,15 @@ class EventController extends Controller
      *         required=true,
      *         @OA\Schema(type="integer", example=1)
      *     ),
-     *     @OA\Response(
+     *      @OA\Response(
      *         response=200,
-     *         description="Evento trovato con successo",
-     *         @OA\JsonContent(ref="#/components/schemas/Event")
-     *     ),
-     *     @OA\Response(response=404, description="Evento non trovato")
+     *         description="Evento visualizzato con successo",
+     *         @OA\JsonContent(type="object",
+     *              @OA\Property(property="status", type="string", example="success"),
+     *              @OA\Property(property="message", type="string", example="Evento visualizzato"),
+     *              @OA\Property(property="data", type="object", ref="#/components/schemas/Event")
+     *          )
+     *      )
      * )
      */
     public function show($id)
@@ -134,12 +140,15 @@ class EventController extends Controller
      *         required=true,
      *         @OA\JsonContent(ref="#/components/schemas/EventRequest")
      *     ),
-     *     @OA\Response(
+     *      @OA\Response(
      *         response=200,
-     *         description="Evento aggiornato con successo",
-     *         @OA\JsonContent(ref="#/components/schemas/Event")
-     *     ),
-     *     @OA\Response(response=404, description="Evento non trovato")
+     *         description="Evento modificato con successo",
+     *         @OA\JsonContent(type="object",
+     *              @OA\Property(property="status", type="string", example="success"),
+     *              @OA\Property(property="message", type="string", example="Evento modificato"),
+     *              @OA\Property(property="data", type="object", ref="#/components/schemas/Event")
+     *          )
+     *      )
      * )
      */
     public function update(EventRequest $request, $id)
@@ -165,12 +174,15 @@ class EventController extends Controller
      *         required=true,
      *         @OA\Schema(type="integer", example=1)
      *     ),
-     *     @OA\Response(
+     *      @OA\Response(
      *         response=200,
-     *         description="Evento eliminato con successo",
-     *         @OA\JsonContent(ref="#/components/schemas/Event")
-     *     ),
-     *     @OA\Response(response=404, description="Evento non trovato")
+     *         description="Evento cancellato con successo",
+     *         @OA\JsonContent(type="object",
+     *              @OA\Property(property="status", type="string", example="success"),
+     *              @OA\Property(property="message", type="string", example="Evento cancellato"),
+     *              @OA\Property(property="data", type="object", ref="#/components/schemas/Event")
+     *          )
+     *      )
      * )
      */
     public function destroy($id)
@@ -203,11 +215,15 @@ class EventController extends Controller
      *         required=false,
      *         @OA\Schema(type="integer", example=2)
      *     ),
-     *     @OA\Response(
+     *      @OA\Response(
      *         response=200,
-     *         description="Lista eventi filtrata",
-     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/Event"))
-     *     )
+     *         description="Evento ricercato con successo",
+     *         @OA\JsonContent(type="object",
+     *              @OA\Property(property="status", type="string", example="success"),
+     *              @OA\Property(property="message", type="string", example="Evento ricercato con successo"),
+     *              @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/Event"))
+     *          )
+     *      )
      * )
      */
     public function search(SearchEventRequest $request)

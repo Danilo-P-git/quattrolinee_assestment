@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *     @OA\Property(property="description", type="string", example="Concerto jazz dal vivo"),
  *     @OA\Property(property="length", type="number", format="float", example=3.0),
  *     @OA\Property(property="start_date", type="string", format="date-time", example="2024-07-15 21:00:00"),
+ *     @OA\Property(property="available_tickets", type="integer", example=1),
+ *     @OA\Property(property="category_id", type="integer", example=1),
  * )
  */
 class Event extends Model
@@ -24,10 +26,14 @@ class Event extends Model
     use HasFactory;
     use SoftDeletes;
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
-    protected $fillable = ['name', 'description', 'length', 'start_date', 'category_id'];
+    protected $fillable = ['name', 'description', 'length', 'start_date', 'category_id', 'available_tickets'];
 
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
     }
 }
