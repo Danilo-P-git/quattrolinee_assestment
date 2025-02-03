@@ -22,4 +22,5 @@ Route::apiResource('categories', CategoryController::class);
 
 Route::get('carts/{cart_id}', [CartController::class, 'show']);
 Route::post('carts/add', [CartController::class, 'add']);
-Route::delete('carts/remove', [CartController::class, 'remove']);
+Route::post('carts/remove', [CartController::class, 'remove']);
+Route::delete('carts/empty/{cart_id}', [CartController::class, 'emptyCart']);

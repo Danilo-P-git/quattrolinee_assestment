@@ -9,5 +9,5 @@ interface ICartRepository
     public function show($cart_id);
     public function addToCart(CartRequest $request);
     public function removeToCart(CartRequest $request);
-    public function emptyCart();
+    public function emptyCart($cart_id);
 }

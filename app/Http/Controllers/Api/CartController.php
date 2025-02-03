@@ -95,7 +95,7 @@ class CartController extends Controller
 
 
     /**
-     * @OA\Delete(
+     * @OA\Post(
      *     path="/api/carts/remove",
      *     summary="Rimuovi al cart un elemento",
      *     description="Rimuove ad un cart un singolo evento o una quantità prestabilita di biglietti  ",
@@ -120,6 +120,41 @@ class CartController extends Controller
         try {
             $cart_item = $this->cartRepository->removeToCart($request);
             return ApiResponse::success($cart_item, 'evento rimosso dal carrello', 200);
+        } catch (\Exception $e) {
+            return ApiResponse::error($e->getMessage(), 500, $e);
+        }
+    }
+
+    /**
+     * @OA\Delete(
+     *     path="/api/carts/empty/{cart_id}",
+     *     summary="Svuota un cart",
+     *     description="Svuota cart di tutti gli eventi e aggiunge agli eventi la quantità che il cart aveva all'interno",
+     *     tags={"Carts"},
+     *     @OA\Parameter(
+     *         name="cart_id",
+     *         in="path",
+     *         description="ID del carrello da eliminare",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Oggetti Cancellati con successo",
+     *         @OA\JsonContent(type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Evento aggiunto al carrello"),
+     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/CartItem"))
+
+     *         )
+     *     )
+     * )
+     */
+    public function emptyCart($cart_id)
+    {
+        try {
+            $cart_items = $this->cartRepository->emptyCart($cart_id);
+            return ApiResponse::success($cart_items, 'carrello svuotato', 200);
         } catch (\Exception $e) {
             return ApiResponse::error($e->getMessage(), 500, $e);
         }

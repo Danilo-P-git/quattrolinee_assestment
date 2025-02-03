@@ -68,8 +68,8 @@ class CartRequest extends FormRequest
 
                         // $quantity = $cartItemQuantity->quantity;
 
-
-                        if ($cartItemQuantity && $cartItemQuantity->quantity < $value) {
+                        Log::info($cartItemQuantity);
+                        if (isset($cartItemQuantity) && $cartItemQuantity->quantity < $value) {
                             $fail("La quantità richiesta ($value) supera i biglietti all'interno del carrello ({$cartItemQuantity->quantity}).");
                         }
                     }

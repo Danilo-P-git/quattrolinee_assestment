@@ -105,13 +105,13 @@
             }
         },
         "/api/carts/remove": {
-            "delete": {
+            "post": {
                 "tags": [
                     "Carts"
                 ],
                 "summary": "Rimuovi al cart un elemento",
                 "description": "Rimuove ad un cart un singolo evento o una quantità prestabilita di biglietti  ",
-                "operationId": "b798944d40d08c70c1bb01ededbcf3d7",
+                "operationId": "db2a70c2a9fea67387f3e8b36b69baf4",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -139,6 +139,56 @@
                                         },
                                         "data": {
                                             "$ref": "#/components/schemas/CartItem"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/carts/empty/{cart_id}": {
+            "delete": {
+                "tags": [
+                    "Carts"
+                ],
+                "summary": "Svuota un cart",
+                "description": "Svuota cart di tutti gli eventi e aggiunge agli eventi la quantità che il cart aveva all'interno",
+                "operationId": "1e840cfb1228d5a846706775702bb75c",
+                "parameters": [
+                    {
+                        "name": "cart_id",
+                        "in": "path",
+                        "description": "ID del carrello da eliminare",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Oggetti Cancellati con successo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Evento aggiunto al carrello"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/CartItem"
+                                            }
                                         }
                                     },
                                     "type": "object"
